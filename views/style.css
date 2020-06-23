@@ -18,3 +18,8 @@ nav{
     height: 50%;
     width: 50%;
 }
+
+#contents{
+    margin-left: 10px;
+    margin-top: 5px;
+}

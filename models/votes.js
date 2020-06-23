@@ -10,6 +10,11 @@ const VotesSchema = new Schema({
     choices: {
         type: [],
         default: []
+    },
+
+    suggestions: {
+        type: [],
+        default: []
     }
 });
 

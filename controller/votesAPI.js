@@ -26,7 +26,7 @@ router.post('/choices', (req, res) => {
     db.Votes.findOneAndUpdate({ name: req.body.name },
         {
             $push: {
-                votes: req.body.votes
+                choices: req.body.choices
             }
         }
     ).then(result => {
