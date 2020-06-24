@@ -20,7 +20,7 @@ connection.on('error', () => {
 });
 
 connection.once('open', () => {
-    console.log('connected to database'.pink);
+    console.log('connected to database');
     console.log('----------------------------'.rainbow);
 });
 

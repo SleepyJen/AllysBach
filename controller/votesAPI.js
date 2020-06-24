@@ -22,8 +22,8 @@ router.post('/name', (req, res) => {
     });
 });
 
-router.post('/dates', (req, res) => {
-    db.Votes.findOneAndUpdate({ name: req.body.name },
+router.post('/dates/:name', (req, res) => {
+    db.Votes.findOneAndUpdate({ name: req.params.name },
         {
             $push: {
                 dates: req.body.dates
@@ -42,6 +42,14 @@ router.post('/locations', (req, res) => {
             }
         }
     ).then(result => {
+        res.json(result);
+    });
+});
+
+router.delete('/delete/:id', (req, res) => {
+    db.Votes.findOneAndDelete({
+        _id: req.params.id
+    }).then(result => {
         res.json(result);
     });
 });

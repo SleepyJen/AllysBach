@@ -26,9 +26,57 @@ $(document).ready(function () {
         }
     });
 
-
     function handleResults() {
-        console.log(dates);
-        console.log(locations);
+        $.ajax({
+            method: 'GET',
+            url: '/votes'
+        }).then(result => {
+            let people = [];
+            if (result.length === 0) {
+                add();
+                addDates();
+            } else {
+                for (let i = 0; i < result.length; i++) {
+                    people.push(result[i].name);
+                }
+                console.log(people);
+                if (people.includes(name)) {
+                    $.ajax({
+                        method: 'GET',
+                        url: '/votes/getName',
+                        data: { name: name }
+                    }).then(res => {
+                        let date = res[0].dates;
+                        console.log(date);
+                    });
+                    //addDates();
+                } else {
+                    add();
+                }
+            }
+        });
     }
+
+    function add() {
+        $.ajax({
+            method: 'POST',
+            url: '/votes/name',
+            data: { name: name }
+        }).then(result => {
+            console.log(result);
+        });
+    }
+
+    function addDates() {
+        for (let i = 0; i < dates.length; i++) {
+
+            // $.ajax({
+            //     method: 'POST',
+            //     url: `/votes/dates/${name}`,
+            //     data: { dates }
+            // });
+        }
+
+    }
+
 });
