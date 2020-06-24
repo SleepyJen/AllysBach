@@ -7,7 +7,12 @@ const VotesSchema = new Schema({
         required: true
     },
 
-    choices: {
+    dates: {
+        type: [],
+        default: []
+    },
+
+    locations: {
         type: [],
         default: []
     },

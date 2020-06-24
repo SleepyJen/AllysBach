@@ -22,11 +22,23 @@ router.post('/name', (req, res) => {
     });
 });
 
-router.post('/choices', (req, res) => {
+router.post('/dates', (req, res) => {
     db.Votes.findOneAndUpdate({ name: req.body.name },
         {
             $push: {
-                choices: req.body.choices
+                dates: req.body.dates
+            }
+        }
+    ).then(result => {
+        res.json(result);
+    });
+});
+
+router.post('/locations', (req, res) => {
+    db.Votes.findOneAndUpdate({ name: req.body.name },
+        {
+            $push: {
+                locations: req.body.locations
             }
         }
     ).then(result => {
