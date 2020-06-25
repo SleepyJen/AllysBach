@@ -34,8 +34,8 @@ router.post('/dates/:name', (req, res) => {
     });
 });
 
-router.post('/locations', (req, res) => {
-    db.Votes.findOneAndUpdate({ name: req.body.name },
+router.post('/locations/:name', (req, res) => {
+    db.Votes.findOneAndUpdate({ name: req.params.name },
         {
             $push: {
                 locations: req.body.locations

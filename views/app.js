@@ -3,6 +3,8 @@ $(document).ready(function () {
         window.location.href = './voting.html';
     });
 
+    start();
+
     var name;
     var dates = [];
     var locations = [];
@@ -39,17 +41,17 @@ $(document).ready(function () {
                 for (let i = 0; i < result.length; i++) {
                     people.push(result[i].name);
                 }
-                console.log(people);
                 if (people.includes(name)) {
                     $.ajax({
                         method: 'GET',
                         url: '/votes/getName',
                         data: { name: name }
                     }).then(res => {
-                        let date = res[0].dates;
-                        console.log(date);
+                        let date = res.dates;
+                        let location = res.locations;
+                        addDates(date);
+                        addLocations(location);
                     });
-                    //addDates();
                 } else {
                     add();
                 }
@@ -65,18 +67,83 @@ $(document).ready(function () {
         }).then(result => {
             console.log(result);
         });
+        for (let i = 0; i < dates.length; i++) {
+            $.ajax({
+                method: 'POST',
+                url: `/votes/dates/${name}`,
+                data: { dates: dates[i] }
+            }).then(res => {
+                console.log('cool dates');
+            });
+        }
+        for (let j = 0; j < locations.length; j++) {
+            $.ajax({
+                method: 'POST',
+                url: `/votes/locations/${name}`,
+                data: { locations: locations[j] }
+            }).then(res2 => {
+                console.log('cool locations');
+            });
+        }
     }
 
-    function addDates() {
+    function addDates(date) {
         for (let i = 0; i < dates.length; i++) {
-
-            // $.ajax({
-            //     method: 'POST',
-            //     url: `/votes/dates/${name}`,
-            //     data: { dates }
-            // });
+            if (!date.includes(dates[i])) {
+                $.ajax({
+                    method: 'POST',
+                    url: `/votes/dates/${name}`,
+                    data: { dates: dates[i] }
+                }).then(result => {
+                    console.log(result);
+                });
+            }
         }
+    }
 
+    function addLocations(location) {
+        for (let i = 0; i < locations.length; i++) {
+            if (!location.includes(locations[i])) {
+                $.ajax({
+                    method: 'POST',
+                    url: `/votes/locations/${name}`,
+                    data: { locations: locations[i] }
+                }).then(result => {
+                    console.log(result);
+                });
+            }
+        }
+    }
+
+    function start() {
+        $.ajax({
+            method: 'GET',
+            url: '/votes'
+        }).then(result => {
+            let mapDates = {};
+            let mapLocations = {};
+            for (let i = 0; i < result.length; i++) {
+                let thisDate = result[i].dates;
+                let thisLocations = result[i].locations;
+                console.log(result[i]);
+                for (let j = 0; j < thisDate.length; j++) {
+                    if (mapDates[thisDate[j]]) {
+                        mapDates[thisDate[j]] = mapDates[thisDate[j]] + 1;
+                    } else {
+                        mapDates[[thisDate[j]]] = 1;
+                    }
+                }
+                for (let k = 0; k < thisLocations.length; k++) {
+                    if (mapLocations[thisLocations[j]]) {
+                        mapDates[thisDate[j]] = mapDates[thisLocations[j]] + 1;
+                    } else {
+                        mapLocations[[thisLocations[j]]] = 1;
+                    }
+                }
+                console.log(mapDates);
+                console.log(mapLocations);
+            }
+        });
     }
 
 });

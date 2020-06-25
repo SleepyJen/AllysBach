@@ -12,7 +12,7 @@ const Color = require('colors');
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: true
+    useFindAndModify: false
 });
 
 connection.on('error', () => {
