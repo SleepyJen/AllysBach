@@ -17,7 +17,6 @@ $(document).ready(function () {
 
         $.each($("input[name='locations']:checked"), function () {
             locations.push($(this).val());
-            console.log(locations);
         });
 
         if (name === '') {
@@ -28,6 +27,10 @@ $(document).ready(function () {
         }
     });
 
+    $('.suggestionsBtn').on('click', function () {
+
+    });
+
     function handleResults() {
         $.ajax({
             method: 'GET',
@@ -36,7 +39,6 @@ $(document).ready(function () {
             let people = [];
             if (result.length === 0) {
                 add();
-                addDates();
             } else {
                 for (let i = 0; i < result.length; i++) {
                     people.push(result[i].name);
@@ -49,6 +51,7 @@ $(document).ready(function () {
                     }).then(res => {
                         let date = res.dates;
                         let location = res.locations;
+                        console.log(res);
                         addDates(date);
                         addLocations(location);
                     });
@@ -66,25 +69,26 @@ $(document).ready(function () {
             data: { name: name }
         }).then(result => {
             console.log(result);
+            for (let i = 0; i < dates.length; i++) {
+                $.ajax({
+                    method: 'POST',
+                    url: `/votes/dates/${name}`,
+                    data: { dates: dates[i] }
+                }).then(res => {
+                    console.log('cool dates');
+                });
+            }
+            for (let j = 0; j < locations.length; j++) {
+                $.ajax({
+                    method: 'POST',
+                    url: `/votes/locations/${name}`,
+                    data: { locations: locations[j] }
+                }).then(res2 => {
+                    console.log('cool locations');
+                });
+            }
         });
-        for (let i = 0; i < dates.length; i++) {
-            $.ajax({
-                method: 'POST',
-                url: `/votes/dates/${name}`,
-                data: { dates: dates[i] }
-            }).then(res => {
-                console.log('cool dates');
-            });
-        }
-        for (let j = 0; j < locations.length; j++) {
-            $.ajax({
-                method: 'POST',
-                url: `/votes/locations/${name}`,
-                data: { locations: locations[j] }
-            }).then(res2 => {
-                console.log('cool locations');
-            });
-        }
+
     }
 
     function addDates(date) {
@@ -122,6 +126,11 @@ $(document).ready(function () {
         }).then(result => {
             let mapDates = {};
             let mapLocations = {};
+            let mostDate = [];
+            let mostLocation = [];
+            let maxDate = -1;
+            let maxLocation = -1;
+
             for (let i = 0; i < result.length; i++) {
                 let thisDate = result[i].dates;
                 let thisLocations = result[i].locations;
@@ -134,15 +143,48 @@ $(document).ready(function () {
                     }
                 }
                 for (let k = 0; k < thisLocations.length; k++) {
-                    if (mapLocations[thisLocations[j]]) {
-                        mapDates[thisDate[j]] = mapDates[thisLocations[j]] + 1;
+                    if (mapLocations[thisLocations[k]]) {
+                        mapDates[thisDate[k]] = mapDates[thisLocations[k]] + 1;
                     } else {
-                        mapLocations[[thisLocations[j]]] = 1;
+                        mapLocations[[thisLocations[k]]] = 1;
                     }
                 }
-                console.log(mapDates);
-                console.log(mapLocations);
+
             }
+            for (const element in mapDates) {
+                if (mapDates[element] >= maxDate) {
+                    maxDate = mapDates[element];
+                }
+            }
+            for (const element in mapDates) {
+                if (mapDates[element] === maxDate) {
+                    mostDate.push(element);
+                }
+            }
+
+            for (const element in mapLocations) {
+                if (mapLocations[element] >= maxLocation) {
+                    maxLocation = mapLocations[element];
+                }
+            }
+            for (const element in mapLocations) {
+                if (mapLocations[element] === maxLocation) {
+                    mostLocation.push(element);
+                }
+            }
+
+            for (let i = 0; i < mostDate.length; i++) {
+                $('.date').append(`
+                <h6 class="information">${mostDate[i]}</h6>
+                `);
+            }
+
+            for (let j = 0; j < mostLocation.length; j++) {
+                $('.location').append(`
+                <h6 class="information">${mostLocation[j]}</h6>
+                `);
+            }
+
         });
     }
 

@@ -31,3 +31,11 @@ nav{
 #contents{
     float: left;
 }
+
+.results{
+    margin-left: 5px;
+}
+
+.information{
+    margin-left: 20px;
+}
