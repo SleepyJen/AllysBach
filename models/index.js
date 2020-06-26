@@ -1,3 +1,4 @@
 module.exports = {
-    Votes: require('./votes')
+    Votes: require('./votes'),
+    Counter: require('./counter')
 }

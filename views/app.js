@@ -8,6 +8,7 @@ $(document).ready(function () {
     var name;
     var dates = [];
     var locations = [];
+    var suggestions;
 
     $('.submit').on('click', function () {
         name = $('#name').val();
@@ -21,15 +22,60 @@ $(document).ready(function () {
 
         if (name === '') {
             alert('Please enter your name');
-            console.log(locations);
         } else {
             handleResults();
         }
     });
 
     $('.suggestionsBtn').on('click', function () {
+        name = $('#nameSuggestion').val();
+        suggestions = $('#suggestions').val();
 
+        if (name === '') {
+            alert('Please enter your name');
+        } else {
+            handleSuggestions();
+        }
     });
+
+    function handleSuggestions() {
+        $.ajax({
+            method: 'GET',
+            url: '/votes/getName',
+            data: { name: name }
+        }).then(result => {
+            if (!result) {
+                add();
+                addSuggestions();
+            } else {
+
+            }
+        });
+    }
+
+    function addSuggestions() {
+        //the suggestion and the vote. 
+        $.ajax({
+            method: 'GET',
+            url: '/votes/getName',
+            data: { name: name }
+        }).then(result => {
+            let suggestion = result.suggestions;
+            if (suggestion.length < 1) {
+                let sugg = [suggestions, 1];
+                $.ajax({
+                    methid: 'POST',
+                    url: `/votes/suggestions/${name}`,
+                    data: { suggestions: sugg }
+                }).then(res => {
+                    console.log('added suggestion');
+                });
+            } else {
+                for (let i = 0; i < suggestion.length; i++) {
+                }
+            }
+        });
+    }
 
     function handleResults() {
         $.ajax({

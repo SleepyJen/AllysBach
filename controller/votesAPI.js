@@ -46,6 +46,18 @@ router.post('/locations/:name', (req, res) => {
     });
 });
 
+router.post('/suggestions/:name', (req, res) => {
+    db.Votes.findOneAndUpdate({ name: req.params.name },
+        {
+            $push: {
+                suggestions: req.body.suggestions
+            }
+        }
+    ).then(result => {
+        res.json(result);
+    });
+});
+
 router.delete('/delete/:id', (req, res) => {
     db.Votes.findOneAndDelete({
         _id: req.params.id
