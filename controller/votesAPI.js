@@ -8,8 +8,10 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/getName', (req, res) => {
-    db.Votes.find({ name: req.body.name }).then(result => {
+router.get('/getName/:name', (req, res) => {
+    db.Votes.findOne({
+        name: req.params.name
+    }).then(result => {
         res.json(result);
     });
 });

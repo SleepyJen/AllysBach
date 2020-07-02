@@ -30,7 +30,7 @@ $(document).ready(function () {
     $('.suggestionsBtn').on('click', function () {
         name = $('#nameSuggestion').val();
         suggestions = $('#suggestions').val();
-
+        $('#suggestions').val('');
         if (name === '') {
             alert('Please enter your name');
         } else {
@@ -41,40 +41,45 @@ $(document).ready(function () {
     function handleSuggestions() {
         $.ajax({
             method: 'GET',
-            url: '/votes/getName',
-            data: { name: name }
+            url: `/votes/getName/${name}`
         }).then(result => {
-            if (!result) {
+            if (result.length < 1) {
                 add();
-                addSuggestions();
+                alert('please add your suggestion again');
             } else {
-
+                addSuggestions(result);
             }
         });
     }
 
-    function addSuggestions() {
+    function addSuggestions(resultTest) {
+        console.log(resultTest);
         //the suggestion and the vote. 
-        $.ajax({
-            method: 'GET',
-            url: '/votes/getName',
-            data: { name: name }
-        }).then(result => {
-            let suggestion = result.suggestions;
-            if (suggestion.length < 1) {
-                let sugg = [suggestions, 1];
-                $.ajax({
-                    methid: 'POST',
-                    url: `/votes/suggestions/${name}`,
-                    data: { suggestions: sugg }
-                }).then(res => {
-                    console.log('added suggestion');
-                });
-            } else {
-                for (let i = 0; i < suggestion.length; i++) {
+        let suggestion = resultTest.suggestions;
+        if (suggestion.length < 1) {
+            // let sugg = [suggestions, 1];
+            $.ajax({
+                methid: 'POST',
+                url: `/votes/suggestions/${name}`,
+                data: { suggestions: sugg }
+            }).then(res => {
+                console.log('added suggestion');
+            });
+        } else {
+            for (let i = 0; i < suggestion.length; i++) {
+                if (suggestion[i] === suggestions) {
+                    alert('You have already suggested this');
+                } else if (suggestion[i] != suggestions && i === suggestion.length - 1) {
+                    $.ajax({
+                        method: 'POST',
+                        url: `/votes/suggestions/${name}`,
+                        data: { suggestions: suggestions }
+                    }).then(res2 => {
+                        console.log(res2);
+                    });
                 }
             }
-        });
+        }
     }
 
     function handleResults() {
@@ -92,8 +97,7 @@ $(document).ready(function () {
                 if (people.includes(name)) {
                     $.ajax({
                         method: 'GET',
-                        url: '/votes/getName',
-                        data: { name: name }
+                        url: `/votes/getName/${name}`
                     }).then(res => {
                         let date = res.dates;
                         let location = res.locations;
