@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const counterSchema = new Schema({
     voterId: {
-        type: Number,
+        type: String,
         required: true
     },
 

@@ -24,7 +24,7 @@ const VotesSchema = new Schema({
 
     tshirt: {
         type: String,
-        deafult: ""
+        required: true
     }
 });
 

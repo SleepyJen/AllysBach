@@ -18,7 +18,8 @@ router.get('/getName/:name', (req, res) => {
 
 router.post('/name', (req, res) => {
     db.Votes.create({
-        name: req.body.name
+        name: req.body.name,
+        tshirt: req.body.tshirt
     }).then(result => {
         res.json(result);
     });

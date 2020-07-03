@@ -81,6 +81,7 @@ $(document).ready(function () {
                         data: { suggestions: suggestions }
                     }).then(res2 => {
                         console.log(res2);
+                        addCounter(resultTest);
                     });
                 }
             }
@@ -88,21 +89,23 @@ $(document).ready(function () {
     }
 
     function addCounter(user) {
-        console.log(user);
+        let voterId = user._id;
+        let counter = 0;
         $.ajax({
             method: 'GET',
-            url: '/counter/getSuggestions'
+            url: '/counter/getSuggestions',
+            data: { suggestion: suggestions }
         }).then(result => {
             if (!result) {
                 $.ajax({
                     method: 'POST',
                     url: '/counter/create',
-                    data: { suggestions: suggestions, voterId: voterId, counter: 0 }
+                    data: { suggestion: suggestions, voterId: voterId, counter: counter }
                 }).then(res => {
-
+                    console.log(res);
                 });
             } else {
-
+                console.log(result);
             }
         });
     }
@@ -135,13 +138,17 @@ $(document).ready(function () {
                 }
             }
         });
+        start();
     }
 
     function add() {
         $.ajax({
             method: 'POST',
             url: '/votes/name',
-            data: { name: name }
+            data: {
+                name: name,
+                tshirt: tshirt
+            }
         }).then(result => {
             console.log(result);
             for (let i = 0; i < dates.length; i++) {
@@ -160,15 +167,6 @@ $(document).ready(function () {
                     data: { locations: locations[j] }
                 }).then(res2 => {
                     console.log('cool locations');
-                });
-            }
-            if (tshirt != "") {
-                $.ajax({
-                    method: 'POST',
-                    url: `/votes/tshirt/${name}`,
-                    data: { tshirt: tshirt }
-                }).then(res3 => {
-                    console.log('cool tshirt');
                 });
             }
         });
@@ -268,8 +266,6 @@ $(document).ready(function () {
                 <h6 class="information">${mostLocation[j]}</h6>
                 `);
             }
-
         });
     }
-
 });
