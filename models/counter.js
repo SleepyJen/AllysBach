@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { model, count } = require('./votes');
 const Schema = mongoose.Schema;
 
 const counterSchema = new Schema({
@@ -17,3 +18,6 @@ const counterSchema = new Schema({
         required: true
     }
 });
+
+const Counter = mongoose.model('Counter', counterSchema);
+module.exports = Counter;

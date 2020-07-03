@@ -32,6 +32,9 @@ app.use(express.json());
 const votes = require('./controller/votesAPI');
 app.use('/votes', votes);
 
+const counter = require('./controller/counterAPI');
+app.use('/counter', counter);
+
 app.listen(PORT, () => {
     console.log('\n-------------------------'.rainbow);
     console.log(`Listening on http://localhost:${PORT}`.blue);

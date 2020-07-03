@@ -9,9 +9,14 @@ $(document).ready(function () {
     var dates = [];
     var locations = [];
     var suggestions;
+    var tshirt = "";
 
     $('.submit').on('click', function () {
         name = $('#name').val();
+
+        tshirt = $('input[name="tshirt"]:checked').val();
+        console.log(tshirt);
+
         $.each($("input[name='dates']:checked"), function () {
             dates.push($(this).val());
         });
@@ -53,17 +58,17 @@ $(document).ready(function () {
     }
 
     function addSuggestions(resultTest) {
-        console.log(resultTest);
         //the suggestion and the vote. 
         let suggestion = resultTest.suggestions;
         if (suggestion.length < 1) {
-            // let sugg = [suggestions, 1];
+            console.log('hit');
             $.ajax({
-                methid: 'POST',
-                url: `/votes/suggestions/${name}`,
-                data: { suggestions: sugg }
+                method: 'POST',
+                url: `/votes/suggestions/${resultTest.name}`,
+                data: { suggestions: suggestions }
             }).then(res => {
                 console.log('added suggestion');
+                addCounter(resultTest);
             });
         } else {
             for (let i = 0; i < suggestion.length; i++) {
@@ -80,6 +85,26 @@ $(document).ready(function () {
                 }
             }
         }
+    }
+
+    function addCounter(user) {
+        console.log(user);
+        $.ajax({
+            method: 'GET',
+            url: '/counter/getSuggestions'
+        }).then(result => {
+            if (!result) {
+                $.ajax({
+                    method: 'POST',
+                    url: '/counter/create',
+                    data: { suggestions: suggestions, voterId: voterId, counter: 0 }
+                }).then(res => {
+
+                });
+            } else {
+
+            }
+        });
     }
 
     function handleResults() {
@@ -135,6 +160,15 @@ $(document).ready(function () {
                     data: { locations: locations[j] }
                 }).then(res2 => {
                     console.log('cool locations');
+                });
+            }
+            if (tshirt != "") {
+                $.ajax({
+                    method: 'POST',
+                    url: `/votes/tshirt/${name}`,
+                    data: { tshirt: tshirt }
+                }).then(res3 => {
+                    console.log('cool tshirt');
                 });
             }
         });

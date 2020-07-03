@@ -20,6 +20,11 @@ const VotesSchema = new Schema({
     suggestions: {
         type: [],
         default: []
+    },
+
+    tshirt: {
+        type: String,
+        deafult: ""
     }
 });
 

@@ -14,6 +14,12 @@ router.get('/get', (req, res) => {
     });
 });
 
+router.get('/getSuggestions', (req, res) => {
+    db.Counter.findOne({ suggestion: req.body.suggestion }).then(result => {
+        res.json(result);
+    });
+});
+
 router.post('/create', (req, res) => {
     db.Counter.create({
         voterId: req.body.voterId,

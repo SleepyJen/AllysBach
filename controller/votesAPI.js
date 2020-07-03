@@ -24,6 +24,16 @@ router.post('/name', (req, res) => {
     });
 });
 
+router.post('/tshirt/:name', (req, res) => {
+    db.Votes.findOneAndUpdate({
+        tshirt: req.body.tshirt
+    }, {
+        where: { name: req.params.name }
+    }).then(result => {
+        res.json(result);
+    });
+});
+
 router.post('/dates/:name', (req, res) => {
     db.Votes.findOneAndUpdate({ name: req.params.name },
         {
